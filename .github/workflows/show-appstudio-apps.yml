@@ -23,4 +23,4 @@ jobs:
         tar xvf oidc.tar  
         du -a ~/.kube/   
         oc config use-context appstudio
-        kubectl get application
+        oc get application

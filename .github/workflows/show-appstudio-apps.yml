@@ -12,14 +12,11 @@ jobs:
     name: List App Studio Apps
     runs-on: ubuntu-18.04  
     steps:
-    - name: Init for kubectl access 
-      uses: actions/github-script@v6
-      with:
-        script: |
-
-          echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
-          echo "${{ env.OIDC }}" | base64 --decode > oidc.tar 
-          tar xvf oidc.tar ~/.kube/cache/
-          du -a ~/.kube/   
-          oc config use-context appstudio
-          kubectl get application
+    - name: Init for kubectl access
+      run: |  
+        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
+        echo "${{ env.OIDC }}" | base64 --decode > oidc.tar 
+        tar xvf oidc.tar ~/.kube/cache/
+        du -a ~/.kube/   
+        oc config use-context appstudio
+        kubectl get application

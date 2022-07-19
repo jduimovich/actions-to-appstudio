@@ -17,8 +17,7 @@ COPY images html/images
 RUN npm install --only=production
 
 # Copy local code to the container image.
-COPY . .
-RUN sh gen.sh
+COPY . . 
 
 # Configure and document the service HTTP port.
 ENV PORT 8080

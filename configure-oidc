@@ -10,6 +10,9 @@ else
     ROOT=~/.kube
 fi   
 
+# be sure to be logged in locally to use creds ... 
+oc config use-context appstudio
+oc get cm 
 KUBE_CONFIG=$(cat $ROOT/config | base64) 
 
 pushd $(pwd) 

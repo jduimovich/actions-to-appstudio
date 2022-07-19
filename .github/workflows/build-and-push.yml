@@ -21,6 +21,7 @@ env:
   # 🖊️ EDIT to specify custom tags for the container image, or default tags will be generated below.
   IMAGE_TAGS: ""
   IMAGE_TAG: "" 
+  CHECK_FOR_APP: "true"
   # 🖊️ EDIT to set a name for your OpenShift app, or a default one will be generated below.
   APP_NAME: "" 
 on: 
@@ -110,7 +111,23 @@ jobs:
         tar xvf oidc.tar   
         popd
         oc config use-context appstudio
-    - name: Ensure App Running 
+    - name: Determine Skip App Check 
+      run: |
+        TEMP_FILE=temp_file
+        echo "Commit message was: ${{ github.event.commits[0].message }}"
+        echo "${{ github.event.commits[0].message }}"  > $TEMP_FILE 
+        echo "Default check for app running first: $CHECK_FOR_APP"
+        if grep "/no-check" $TEMP_FILE
+        then  
+            export CHECK_FOR_APP=false  
+        fi
+        if grep "/check" $TEMP_FILE
+        then  
+            export CHECK_FOR_APP=true  
+        fi
+        echo "CHECK_FOR_APP=${CHECK_FOR_APP}" | tee -a $GITHUB_ENV   
+    - name: Ensure App Running
+      if: env.CHECK_FOR_APP == 'true' 
       run: |
         oc apply -f app-studio
     - name: Install  yq 

@@ -120,7 +120,7 @@ jobs:
         chmod +x ./yq
     - name: Install and Deploy new Image
       run: |    
-        echo "Updating Component: $COMP image to: ${{ steps.push-image.outputs.registry-path }}"
-        oc get component $COMP -n $COMP -o yaml  | \
+        echo "Updating Component: ${{ env.APP_NAME }} image to: ${{ steps.push-image.outputs.registry-path }}"
+        oc get component ${{ env.APP_NAME }} -o yaml  | \
           ./yq '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"' | \
-          oc apply -n $COMP  -f -
+          oc apply   -f -

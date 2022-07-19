@@ -43,7 +43,7 @@
     </p>
 
     <p class="w3-xlarge">
-      This application used the RedHat OpenShift Starter Workflow and OpenShift Gitops to get an app running in minutes.
+      This application uses the GitHub Actions and App Studio to get an app running in minutes.
     </p>
 
     <a href="https://github.com/redhat-actions" target="_blank">
@@ -63,21 +63,12 @@
 
   <div class="w3-row-padding w3-padding-64 w3-container">
     <div class="w3-content"> 
-        <h1 id="summary">Run an App using OpenShift Gitops in 4 Easy Steps </h1> 
+        <h1 id="summary">Run an App using OpenShift Gitops and app studio in 2 Easy Steps </h1> 
         <ol class="w3-xlarge">
-          <li> Modify the `argo` directory to point to your fork.
+          <li> Install App-Studio Cluster Secrets for your Account.
             </a>
           </li>
-          <li> `oc apply -f argo` to install the application on your cluster
-          </li>
-          <li>
-               The app will be running on your cluster. 
-          </li>
-          <li>
-            Push changes to your app and the built-in workflow will create a pull-request or will directly push changes into your gitops configuration.
-            See the workflow to set the default or include <pre>/update-via-push</pre> or <pre>/update-via-pr</pre> in your commit message 
-            to override the default in your workflow. 
-          </li>
+          <li> Push your changes to your repo and watch your app run in App Studio 
         </ol> 
 
         <p class="w3-xlarge"></p>

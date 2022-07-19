@@ -12,16 +12,15 @@ jobs:
     name: List App Studio Apps
     runs-on: ubuntu-18.04  
     steps:
-    - name: Init for oc access
+    - name: Initialize App Studio Access
       run: |  
         brew install int128/kubelogin/kubelogin
-        mkdir ~/.kube
-        du -a ~/.kube/   
-        mkdir ~/.kube/cache 
+        mkdir -p ~/.kube ~/.kube/cache 
         echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
         echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc.tar  
         cd ~/.kube/cache
-        tar xvf oidc.tar  
-        du -a ~/.kube/   
+        tar xvf oidc.tar   
         oc config use-context appstudio
+    - name: List Applications
+      run: |   
         oc get application

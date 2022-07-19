@@ -131,8 +131,7 @@ jobs:
       run: |
         oc apply -f app-studio
     - name: Install  yq 
-      run: |
-        ls -al 
+      run: | 
         export VERSION=v4.2.0  
         export BINARY=yq_linux_amd64
         wget -q https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O ./yq

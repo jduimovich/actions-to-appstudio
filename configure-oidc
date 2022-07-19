@@ -1,0 +1,10 @@
+
+ROOT=/mnt/c/Users/jduim/.kube
+
+KUBE_CONFIG=$(cat $ROOT/config | base64)
+
+tar cfv oidc.tar $ROOT/cache/oidc-login/*
+OIDC=$(cat oidc.tar | base64) 
+gh secret set KUBE_CONFIG -b $KUBE_CONFIG
+gh secret set OIDC -b %LOGIN% $OIDC 
+ 

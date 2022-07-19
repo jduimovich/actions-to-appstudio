@@ -3,8 +3,7 @@
 name: List-App-Studio-Apps 
 env: 
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-  OIDC: ${{ secrets.OIDC }}
-  OIDC_NAME: ${{ secrets.OIDC_NAME }}
+  OIDC: ${{ secrets.OIDC }} 
 on: 
   push: 
     branches: [ "main" ] 
@@ -18,8 +17,7 @@ jobs:
       with:
         script: |
 
-          echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config
-          echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc-login/${{ env.OIDC_NAME }}
-           , refer to https://github.com/redhat-actions/oc-login#getting-started-with-the-action-or-see-example");
-          kubectl get cm 
+          echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
+          echo "${{ env.OIDC }}" | tar xv ~/.kube/cache/
+          du -a ~/.kube/   
           kubectl get application

@@ -12,7 +12,7 @@ jobs:
     name: List App Studio Apps
     runs-on: ubuntu-18.04  
     steps:
-    - name: Init for kubectl access
+    - name: Init for oc access
       run: |  
         mkdir ~/.kube
         du -a ~/.kube/   

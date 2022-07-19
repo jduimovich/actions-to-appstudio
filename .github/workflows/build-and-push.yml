@@ -16,6 +16,8 @@ env:
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   IMAGE_REGISTRY_USER: ${{ github.actor }}
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
+  KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+  OIDC: ${{ secrets.OIDC }} 
   # 🖊️ EDIT to specify custom tags for the container image, or default tags will be generated below.
   IMAGE_TAGS: ""
   IMAGE_TAG: "" 
@@ -68,7 +70,7 @@ jobs:
     - name: Determine image tags
       if: env.IMAGE_TAGS == ''
       run: |
-        echo "IMAGE_TAGS=latest ${GITHUB_SHA::12}" | tee -a $GITHUB_ENV
+        echo "IMAGE_TAGS=${GITHUB_SHA::12} latest " | tee -a $GITHUB_ENV
         echo "IMAGE_TAG=${GITHUB_SHA::12}" | tee -a $GITHUB_ENV 
     - name: Build from Dockerfile 
       id: build-image
@@ -97,3 +99,26 @@ jobs:
     - name: Image
       run: |
         echo "IMAGE = ${{ steps.push-image.outputs.registry-path }}"  
+    - name: Initialize App Studio Access
+      run: |  
+        brew install int128/kubelogin/kubelogin
+        mkdir -p ~/.kube ~/.kube/cache 
+        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
+        echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc.tar  
+        cd ~/.kube/cache
+        tar xvf oidc.tar   
+        oc config use-context appstudio
+    - name: Install  yq
+      if: env.NEW_IMAGE_CREATED == 'true'
+      run: |
+        ls -al 
+        export VERSION=v4.2.0  
+        export BINARY=yq_linux_amd64
+        wget -q https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O ./yq
+        chmod +x ./yq
+    - name: Install and Deploy new Image
+      run: |    
+        echo "Updating Component: $COMP image to: $IMG"
+        oc get component $COMP -n $COMP -o yaml  | \
+          ./yq '.spec.containerImage="'$IMG'"' | \
+          oc apply -n $COMP  -f -

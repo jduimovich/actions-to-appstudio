@@ -140,5 +140,6 @@ jobs:
       run: |    
         echo "Component: ${{ env.APP_NAME }} image updated to: ${{ steps.push-image.outputs.registry-path }}"
         ./yq e '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
+        ./yq e '.spec.build.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
         cat app-studio/actions-to-appstudio.yaml
         oc apply -f app-studio/actions-to-appstudio.yaml

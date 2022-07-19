@@ -16,9 +16,9 @@ jobs:
       run: |  
         mkdir ~/.kube
         du -a ~/.kube/   
-        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
-        echo "${{ env.OIDC }}" | base64 --decode > oidc.tar  
         mkdir ~/.kube/cache 
+        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
+        echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc.tar  
         cd ~/.kube/cache
         tar xvf oidc.tar  
         du -a ~/.kube/   

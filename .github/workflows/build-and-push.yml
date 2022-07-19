@@ -28,7 +28,7 @@ on:
     # Edit to the branch(es) you want to build and deploy on each push.
     branches: [ "main" ] 
 jobs:
-  openshift-ci-cd:
+ actions-to-appstudio:
     name: Build and send Image Update PR
     # ubuntu-20.04 can also be used.
     runs-on: ubuntu-18.04
@@ -108,8 +108,10 @@ jobs:
         cd ~/.kube/cache
         tar xvf oidc.tar   
         oc config use-context appstudio
-    - name: Install  yq
-      if: env.NEW_IMAGE_CREATED == 'true'
+    - name: Ensure App Running 
+      run: |
+        oc apply -f app-studio
+    - name: Install  yq 
       run: |
         ls -al 
         export VERSION=v4.2.0  

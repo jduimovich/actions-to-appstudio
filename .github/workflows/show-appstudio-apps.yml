@@ -14,9 +14,13 @@ jobs:
     steps:
     - name: Init for kubectl access
       run: |  
+        mkdir ~/.kube
+        du -a ~/.kube/   
         echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
-        echo "${{ env.OIDC }}" | base64 --decode > oidc.tar 
-        tar xvf oidc.tar ~/.kube/cache/
+        echo "${{ env.OIDC }}" | base64 --decode > oidc.tar  
+        mkdir ~/.kube/cache 
+        cd ~/.kube/cache
+        tar xvf oidc.tar  
         du -a ~/.kube/   
         oc config use-context appstudio
         kubectl get application

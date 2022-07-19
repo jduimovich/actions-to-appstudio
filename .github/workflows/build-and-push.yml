@@ -121,6 +121,10 @@ jobs:
     - name: Install and Deploy new Image
       run: |    
         echo "Updating Component: ${{ env.APP_NAME }} image to: ${{ steps.push-image.outputs.registry-path }}"
-        oc get component ${{ env.APP_NAME }} -o yaml  | \
-          ./yq '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"' | \
-          oc apply   -f -
+        oc get component ${{ env.APP_NAME }} -o yaml  > component.yaml
+        cat component.yaml
+        ./yq '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  component.yaml  > update.yaml
+        cat update.yaml
+        diff component.yaml update.yaml
+        oc apply -f update.yaml
+        

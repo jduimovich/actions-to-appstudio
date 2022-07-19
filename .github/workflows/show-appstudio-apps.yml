@@ -18,6 +18,8 @@ jobs:
         script: |
 
           echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
-          echo "${{ env.OIDC }}" | tar xv ~/.kube/cache/
+          echo "${{ env.OIDC }}" | base64 --decode > oidc.tar 
+          tar xvf oidc.tar ~/.kube/cache/
           du -a ~/.kube/   
+          oc config use-context appstudio
           kubectl get application

@@ -5,7 +5,7 @@ env:
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
   OIDC: ${{ secrets.OIDC }} 
 on: 
-  push: 
+  repository_dispatch: 
     branches: [ "main" ] 
 jobs:
   list-apps:

@@ -159,7 +159,7 @@ jobs:
         #./yq e '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
         #cat app-studio/actions-to-appstudio.yaml
         #oc apply -f app-studio/actions-to-appstudio.yaml 
-        oc get component ${{ env.APP_NAME }} -o yaml  | ./yq  e '.spec.containerImage = "${{ steps.push-image.outputs.registry-path }}"'  | oc apply -f -
+        oc get component ${{ env.APP_NAME }} -o yaml  | ./yq  e '.spec.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | oc apply -f -
     - name: App Studio Cleanup
       continue-on-error: true
       run: |     

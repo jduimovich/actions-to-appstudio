@@ -145,3 +145,14 @@ jobs:
         ./yq e '.spec.build.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
         cat app-studio/actions-to-appstudio.yaml
         oc apply -f app-studio/actions-to-appstudio.yaml
+    - name: Tell App Studio to grab logs
+      run: |    
+        ID=$(gh run list  | head -1 | cut  -f 7)  
+        oc create secret generic token-secret --from-literal=token.txt=${{ github.token }} 
+        NAME=show-gh-action-${{ env.IMAGE_TAG }}
+        yq pipelinerun.yaml | 
+          yq e '.metadata.name = "'$NAME'"' |
+          yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 
+          yq e '.spec.params[1].value = "'${{ env.APP_NAME }}'"' | 
+          yq e '.spec.params[2].value = "'${{ github.run_id }}'"' |   
+          oc apply -f -  

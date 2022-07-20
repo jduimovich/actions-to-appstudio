@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: show-gh-action
+spec:
+  pipelineRef:
+    name: watch-logs-pipeline
+    bundle: quay.io/jduimovich0/watcher:latest
+  params:
+    - name: OWNER
+      value: TO_BE_FILLED_IN
+    - name: REPO
+      value: TO_BE_FILLED_IN
+    - name: WORKFLOW_ID
+      value: TO_BE_FILLED_IN
+  workspaces:
+    - name: secrets
+      secret:
+        secretName: token-secret 

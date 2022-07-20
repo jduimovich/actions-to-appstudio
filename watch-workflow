@@ -6,7 +6,7 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
  
 ID=$(gh run list  | head -1 | cut  -f 7) 
 
-oc create secret generic token-secret --from-literal=token.txt=$MY_GITHUB_TOKEN  
+oc create secret generic token-secret --from-literal=token.txt=$MY_GITHUB_TOKEN > /dev/null 2>&1 || true   
 BUILD_TAG=$(date +"%Y-%m-%d-%H%M%S")
 REPO=$(basename `pwd`)
 NAME=show-gh-action-$BUILD_TAG
@@ -16,9 +16,7 @@ yq $SCRIPTDIR/pipelinerun.yaml |
     yq e '.spec.params[1].value = "'$REPO'"' | 
     yq e '.spec.params[2].value = "'$ID'"' |   
     oc apply -f -  
-
-sleep 1
-oc delete secret token-secret
+ 
 # tkn fails because it doesn't support bundles 
 #echo  tkn pr logs $NAME -f
 #tkn pr logs $NAME -f 

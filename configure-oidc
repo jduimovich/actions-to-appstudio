@@ -24,4 +24,5 @@ popd
 
 gh secret set KUBE_CONFIG -b "$KUBE_CONFIG"
 gh secret set OIDC -b "$OIDC"
+gh secret set MY_GITHUB_TOKEN -b "$MY_GITHUB_TOKEN"
  

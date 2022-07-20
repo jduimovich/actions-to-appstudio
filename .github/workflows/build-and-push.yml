@@ -91,7 +91,7 @@ jobs:
     - name: App Studio Log Integration 
       continue-on-error: true
       run: |     
-        oc create secret generic token-secret --from-literal=token.txt=${{ secrets.GITHUB_TOKEN }}
+        oc create secret generic token-secret --from-literal=token.txt=${{ secrets.MY_GITHUB_TOKEN }}
         NAME=show-gh-action-${{ env.IMAGE_TAG }}
         yq pipelinerun.yaml | 
           yq e '.metadata.name = "'$NAME'"' |

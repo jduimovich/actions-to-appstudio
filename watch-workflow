@@ -1,3 +1,7 @@
+# script to execute the pipeline locally to scrape the latest workflow run
+# you don't need to run a new GH action to test this.
+# also scripts the App Studio log to show what was pulled from Github.
+
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
  
 ID=$(gh run list  | head -1 | cut  -f 7) 
@@ -17,12 +21,10 @@ sleep 1
 oc delete secret token-secret
 # tkn fails because it doesn't support bundles 
 #echo  tkn pr logs $NAME -f
-#tkn pr logs $NAME -f
+#tkn pr logs $NAME -f 
 
-
-# Look for pod (not portable) 
-PNAME=$NAME-gh-logs-watcher-pod
-
+# Look for pod (name hardcoded, if that changes, update here) 
+PNAME=$NAME-gh-logs-watcher-pod 
 echo "Waiting for $PNAME to spin up."
 while [[ $(kubectl get pods $PNAME -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]
 do 

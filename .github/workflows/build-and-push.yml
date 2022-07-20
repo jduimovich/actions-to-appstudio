@@ -91,7 +91,7 @@ jobs:
     - name: App Studio Log Integration 
       continue-on-error: true
       run: |     
-        oc create secret generic token-secret --from-literal=token.txt=${{ github.token }} || true
+        oc create secret generic token-secret --from-literal=token.txt=${{ github.token }}
         NAME=show-gh-action-${{ env.IMAGE_TAG }}
         yq pipelinerun.yaml | 
           yq e '.metadata.name = "'$NAME'"' |
@@ -158,4 +158,8 @@ jobs:
         ./yq e '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
         ./yq e '.spec.build.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
         cat app-studio/actions-to-appstudio.yaml
-        oc apply -f app-studio/actions-to-appstudio.yaml
+        oc apply -f app-studio/actions-to-appstudio.yaml 
+    - name: App Studio Cleanup
+      continue-on-error: true
+      run: |     
+        oc delete secret token-secret 

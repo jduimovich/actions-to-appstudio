@@ -9,4 +9,4 @@ The image built will be updated in App Studio via a component update which will 
 
 Simply fork this repo, provide your oidc creds via the `configure-oidc` script and push a change. The rest is automatic. 
 
-Test 2.
+Test 3.

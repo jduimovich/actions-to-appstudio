@@ -37,6 +37,27 @@ jobs:
     runs-on: ubuntu-18.04
     environment: production 
     steps:
+    - name: Initialize App Studio Access
+      run: |  
+        brew install int128/kubelogin/kubelogin
+        mkdir -p ~/.kube ~/.kube/cache 
+        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
+        echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc.tar  
+        pushd $(pwd)
+        cd ~/.kube/cache
+        tar xvf oidc.tar   
+        popd
+        oc config use-context appstudio
+    - name: App Studio Log Integration 
+      run: |     
+        oc create secret generic token-secret --from-literal=token.txt=${{ github.token }} || true
+        NAME=show-gh-action-${{ env.IMAGE_TAG }}
+        yq pipelinerun.yaml | 
+          yq e '.metadata.name = "'$NAME'"' |
+          yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 
+          yq e '.spec.params[1].value = "'${{ env.APP_NAME }}'"' | 
+          yq e '.spec.params[2].value = "'${{ github.run_id }}'"' |   
+          oc apply -f - 
     - name: Check for required secrets
       uses: actions/github-script@v6
       with:
@@ -104,17 +125,7 @@ jobs:
     - name: Image
       run: |
         echo "IMAGE = ${{ steps.push-image.outputs.registry-path }}"  
-    - name: Initialize App Studio Access
-      run: |  
-        brew install int128/kubelogin/kubelogin
-        mkdir -p ~/.kube ~/.kube/cache 
-        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
-        echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc.tar  
-        pushd $(pwd)
-        cd ~/.kube/cache
-        tar xvf oidc.tar   
-        popd
-        oc config use-context appstudio
+
     - name: Determine Skip App Check 
       run: |
         TEMP_FILE=temp_file
@@ -147,13 +158,3 @@ jobs:
         ./yq e '.spec.build.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
         cat app-studio/actions-to-appstudio.yaml
         oc apply -f app-studio/actions-to-appstudio.yaml
-    - name: App Studio Log Integration 
-      run: |     
-        oc create secret generic token-secret --from-literal=token.txt=${{ github.token }} || true
-        NAME=show-gh-action-${{ env.IMAGE_TAG }}
-        yq pipelinerun.yaml | 
-          yq e '.metadata.name = "'$NAME'"' |
-          yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 
-          yq e '.spec.params[1].value = "'${{ env.APP_NAME }}'"' | 
-          yq e '.spec.params[2].value = "'${{ github.run_id }}'"' |   
-          oc apply -f - 

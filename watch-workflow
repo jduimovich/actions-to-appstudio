@@ -13,5 +13,22 @@ yq $SCRIPTDIR/pipelinerun.yaml |
     yq e '.spec.params[2].value = "'$ID'"' |   
     oc apply -f -  
 
-echo  tkn pr logs $NAME -f
-tkn pr logs $NAME -f
+sleep 1
+oc delete secret token-secret
+# tkn fails because it doesn't support bundles 
+#echo  tkn pr logs $NAME -f
+#tkn pr logs $NAME -f
+
+
+# Look for pod (not portable) 
+PNAME=$NAME-gh-logs-watcher-pod
+
+echo "Waiting for $PNAME to spin up."
+while [[ $(kubectl get pods $PNAME -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]
+do 
+    echo -n . 
+    sleep 1
+done 
+echo
+echo "Logs:"
+oc logs $PNAME -f 

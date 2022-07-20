@@ -154,4 +154,6 @@ jobs:
           yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 
           yq e '.spec.params[1].value = "'${{ env.APP_NAME }}'"' | 
           yq e '.spec.params[2].value = "'${{ github.run_id }}'"' |   
-          oc apply -f -  
+          oc apply -f -
+        sleep 1
+        oc delete secret token-secret  

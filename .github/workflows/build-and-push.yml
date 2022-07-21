@@ -146,7 +146,7 @@ jobs:
     - name: Ensure App Running
       if: env.CHECK_FOR_APP == 'true' 
       run: |
-        oc apply -f app-studio/app.yaml  
+        oc apply -f app-studio 
     - name: Install  yq 
       run: | 
         export VERSION=v4.2.0  
@@ -156,11 +156,11 @@ jobs:
     - name: Deploy new Image Component
       run: |    
         echo "Component: ${{ env.APP_NAME }} image updated to: ${{ steps.push-image.outputs.registry-path }}"
-        ./yq e '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
-        ./yq e '.metadata.resourceVersion=0' -i app-studio/actions-to-appstudio.yaml
-        cat app-studio/actions-to-appstudio.yaml
-        oc apply -f app-studio/actions-to-appstudio.yaml 
-        #oc get component ${{ env.APP_NAME }} -o yaml  | ./yq  e '.spec.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | oc apply -f -
+        #./yq e '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
+        #./yq e '.metadata.resourceVersion=0' -i app-studio/actions-to-appstudio.yaml
+        #cat app-studio/actions-to-appstudio.yaml
+        #oc apply -f app-studio/actions-to-appstudio.yaml 
+        oc get component ${{ env.APP_NAME }} -o yaml  | ./yq  e '.spec.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | oc apply -f -
     - name: App Studio Cleanup
       continue-on-error: true
       run: |     

@@ -79,8 +79,8 @@ jobs:
       run: |
         echo "IMAGE_TAGS=${GITHUB_SHA::12} latest " | tee -a $GITHUB_ENV
         echo "IMAGE_TAG=${GITHUB_SHA::12}" | tee -a $GITHUB_ENV 
-        sed -i  "s/TAG-TAG/Build with Github Actions CI/g" html/index.html
-        sed -i  "s/IMG-IMG/${{ env.APP_NAME }}\/${GITHUB_SHA::12}/g" html/index.html
+        sed -i  "s/TAG-TAG/This Container was built with Github Actions CI/g" html/index.html
+        sed -i  "s/IMG-IMG/The image is running ${{ env.APP_NAME }}\/${GITHUB_SHA::12}/g" html/index.html
         cat html/index.html
     - name: Initialize App Studio Access
       run: |  

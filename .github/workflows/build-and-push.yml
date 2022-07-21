@@ -146,7 +146,8 @@ jobs:
     - name: Ensure App Running
       if: env.CHECK_FOR_APP == 'true' 
       run: |
-        oc apply -f app-studio/app.yaml
+        oc apply -f app-studio/app.yaml 
+        oc apply -f app-studio/actions-to-appstudio.yaml 
     - name: Install  yq 
       run: | 
         export VERSION=v4.2.0  

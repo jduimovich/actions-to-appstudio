@@ -42,7 +42,11 @@ jobs:
       with:
         script: |
           const secrets = { 
+            IMAGE_REGISTRY: `${{ env.IMAGE_REGISTRY }}`,
+            IMAGE_REGISTRY_USER: `${{ env.IMAGE_REGISTRY_USER }}`,
             IMAGE_REGISTRY_PASSWORD: `${{ env.IMAGE_REGISTRY_PASSWORD }}`,
+            KUBE_CONFIG: `${{ env.KUBE_CONFIG }}`,
+            OIDC: `${{ env.OIDC }}`,
           }; 
           const missingSecrets = Object.entries(secrets).filter(([ name, value ]) => {
             if (value.length === 0) {

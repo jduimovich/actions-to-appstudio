@@ -175,8 +175,8 @@ jobs:
         #oc apply -f app-studio/actions-to-appstudio.yaml
         NAME=show-gh-action-${{ env.IMAGE_TAG }}
 
-        oc annotate pipelinerun $NAME build.appstudio.openshift.io/repo=${{ github.event.repository.name }}
-        oc annotate pipelinerun $NAME build.appstudio.openshift.io/image=${{ steps.push-image.outputs.registry-path }}
+        oc annotate pipelinerun --overwrite=true $NAME build.appstudio.openshift.io/repo=${{ github.event.repository.name }}
+        oc annotate pipelinerun --overwrite=true $NAME build.appstudio.openshift.io/image=${{ steps.push-image.outputs.registry-path }}
 
         oc get component ${{ env.APP_NAME }} -o yaml  | \
           ./yq  e '.spec.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | \

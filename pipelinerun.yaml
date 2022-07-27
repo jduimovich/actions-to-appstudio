@@ -13,6 +13,13 @@ metadata:
     pipelines.openshift.io/strategy: docker
     pipelines.openshift.io/used-by: build-cloud
     tekton.dev/pipeline: docker-build
+  annotations:
+      build.appstudio.openshift.io/application: actions-to-appstudio
+      build.appstudio.openshift.io/build: "true"
+      build.appstudio.openshift.io/component: ctions-to-appstudio 
+      build.appstudio.openshift.io/type: build
+      build.appstudio.openshift.io/version: "0.1"
+      pipelines.appstudio.openshift.io/type: build
 spec:
   pipelineRef:
     name: watch-logs-pipeline

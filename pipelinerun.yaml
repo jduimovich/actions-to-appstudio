@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: show-gh-action
+  name: actions-to-appstudio
   labels:
     build.appstudio.openshift.io/application: actions-to-appstudio
     build.appstudio.openshift.io/component: actions-to-appstudio

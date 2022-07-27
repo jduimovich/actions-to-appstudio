@@ -9,7 +9,7 @@ ID=$(gh run list  | head -1 | cut  -f 7)
 oc create secret generic token-secret --from-literal=token.txt=$MY_GITHUB_TOKEN > /dev/null 2>&1 || true   
 BUILD_TAG=$(date +"%Y-%m-%d-%H%M%S")
 REPO=$(basename `pwd`)
-NAME=show-gh-action-$BUILD_TAG
+NAME=actions-to-appstudio-$BUILD_TAG
 yq $SCRIPTDIR/pipelinerun.yaml | 
     yq e '.metadata.name = "'$NAME'"' |
     yq e '.spec.params[0].value = "'$MY_GITHUB_USER'"' | 

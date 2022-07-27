@@ -22,7 +22,7 @@ yq $SCRIPTDIR/pipelinerun.yaml |
 #tkn pr logs $NAME -f 
 
 # Look for pod (name hardcoded, if that changes, update here) 
-PNAME=$NAME-gh-logs-watcher-pod 
+PNAME=$NAME-github-actions-bridge-pod 
 echo "Waiting for $PNAME to spin up."
 while [[ $(kubectl get pods $PNAME -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]
 do 

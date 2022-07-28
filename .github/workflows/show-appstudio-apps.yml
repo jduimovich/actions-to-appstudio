@@ -20,9 +20,9 @@ jobs:
       run: |   
         echo "Initialize App Studio Access" 
         echo "HOME=$HOME" 
+        mkdir -p $HOME/.kube $HOME/.kube/cache 
         export HOME=/oidc-oc
-        echo "HOME2=$HOME" 
-        echo "HOME3=~" 
+        echo "HOME2=$HOME"  
         KDIR=$HOME/.kube
         KCACHE=$KDIR/cache
         KUBECONFIG=$KDIR/config

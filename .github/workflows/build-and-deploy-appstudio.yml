@@ -24,8 +24,9 @@ env:
   CHECK_FOR_APP: "true"
   # 🖊️ EDIT to set a name for your OpenShift app, or a default one will be generated below.
   APP_NAME: "" 
-on:  
+on: 
   push:
+    # Edit to the branch(es) you want to build and deploy on each push.
     branches: [ "main" ]  
   workflow_dispatch:
     branches: [ "main" ]  

@@ -1,5 +1,3 @@
-
-
 # IF kubeconfig is weird (wsl on windows, or set specifically use it)
 echo "KUBECONFIG is $KUBECONFIG"
 if [ -n "$KUBECONFIG" ]

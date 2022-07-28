@@ -33,7 +33,7 @@ jobs:
         tar xvf oidc.tar
         du -a $KDIR  
         oc config use-context appstudio
-        oc get application
+        oc get pods
     - name: List Applications
       run: |   
-        oc get application
+        oc get pods

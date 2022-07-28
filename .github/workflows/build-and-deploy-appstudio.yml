@@ -32,7 +32,7 @@ on:
     branches: [ "main" ]  
 jobs:
  actions-to-appstudio:
-    name: Build and send Image Update PR
+    name: Build and Update App Studio
     # ubuntu-20.04 can also be used.
     runs-on: ubuntu-18.04
     environment: production 
@@ -82,7 +82,8 @@ jobs:
         sed -i  "s/TAG-TAG/This Container was built with Github Actions CI/g" html/index.html
         sed -i  "s/IMG-IMG/The image is running ${{ env.APP_NAME }}\/${GITHUB_SHA::12}/g" html/index.html
         cat html/index.html
-    - name: Initialize App Studio Access
+    - name: Initialize App Studio Log Integration
+      continue-on-error: true
       run: |  
         brew install int128/kubelogin/kubelogin
         mkdir -p ~/.kube ~/.kube/cache 
@@ -92,10 +93,7 @@ jobs:
         cd ~/.kube/cache
         tar xvf oidc.tar   
         popd
-        oc config use-context appstudio
-    - name: App Studio Log Integration 
-      continue-on-error: true
-      run: |     
+        oc config use-context appstudio 
         oc create secret generic token-secret --from-literal="token.txt=${{ secrets.MY_GITHUB_TOKEN }}" || true
         NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}
         yq pipelinerun.yaml | 

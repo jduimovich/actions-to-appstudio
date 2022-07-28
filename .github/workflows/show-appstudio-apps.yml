@@ -21,8 +21,11 @@ jobs:
         echo "Initialize App Studio Access" 
         echo "HOME=$HOME" 
         export HOME=/oidc-oc
+        echo "HOME2=$HOME" 
+        echo "HOME3=~" 
         KDIR=$HOME/.kube
         KCACHE=$KDIR/cache
+        KUBECONFIG=$KDIR/config
         mkdir -p $KDIR $KCACHE
         echo "${{ env.KUBE_CONFIG }}" | base64 --decode > $KDIR/config 
         echo "${{ env.OIDC }}" | base64 --decode > $KCACHE/oidc.tar  

@@ -21,9 +21,7 @@ jobs:
         echo "Initialize App Studio Access" 
         whoami
         echo "HOME=$HOME"  
-        mkdir -p $HOME/.kube $HOME/.kube/cache 
-        export HOME=/oidc-oc
-        echo "HOME2=$HOME"  
+        mkdir -p $HOME/.kube $HOME/.kube/cache  
         KDIR=$HOME/.kube
         KCACHE=$KDIR/cache
         KUBECONFIG=$KDIR/config

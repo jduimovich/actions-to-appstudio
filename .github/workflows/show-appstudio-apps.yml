@@ -16,11 +16,15 @@ jobs:
     steps:
     - name: Initialize App Studio Access
       run: |   
-        mkdir -p ~/.kube ~/.kube/cache 
-        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
-        echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc.tar  
-        cd ~/.kube/cache
+        echo "INIT"
+        pwd 
+        echo "---"
+        mkdir -p /oidc-oc/.kube /oidc-oc/.kube/cache 
+        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > /oidc-oc/.kube/config 
+        echo "${{ env.OIDC }}" | base64 --decode > /oidc-oc/.kube/cache/oidc.tar  
+        cd /oidc-oc/.kube/cache
         tar xvf oidc.tar   
+        export KUBECONFIG =/oidc-oc/.kube/config 
         oc config use-context appstudio
     - name: List Applications
       run: |   

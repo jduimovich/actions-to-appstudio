@@ -25,8 +25,8 @@ jobs:
         tar xvf oidc.tar
         du -a $KDIR 
         export KUBECONFIG=$KDIR/config 
-        oc --cache-dir=/oidc-oc/.kube/cache config use-context appstudio
-        oc --cache-dir=/oidc-oc/.kube/cache get application
+        oc --cache-dir="/oidc-oc/.kube/cache" config use-context appstudio
+        oc --cache-dir="/oidc-oc/.kube/cache" get application
     - name: List Applications
       run: |   
         oc get application

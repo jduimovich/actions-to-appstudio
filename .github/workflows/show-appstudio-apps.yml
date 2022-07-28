@@ -5,6 +5,8 @@ env:
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
   OIDC: ${{ secrets.OIDC }} 
 on: 
+  push:
+    branches: [ "main" ]  
   workflow_dispatch:
     branches: [ "main" ] 
 jobs:

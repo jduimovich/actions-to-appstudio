@@ -26,6 +26,7 @@ jobs:
         tar xvf oidc.tar   
         export KUBECONFIG=/oidc-oc/.kube/config 
         oc config use-context appstudio
+        oc get application
     - name: List Applications
       run: |   
         oc get application

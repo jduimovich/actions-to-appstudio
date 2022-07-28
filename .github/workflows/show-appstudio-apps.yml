@@ -5,16 +5,17 @@ env:
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
   OIDC: ${{ secrets.OIDC }} 
 on: 
-  repository_dispatch: 
+  workflow_dispatch:
     branches: [ "main" ] 
 jobs:
   list-apps:
     name: List App Studio Apps
-    runs-on: ubuntu-18.04  
+    runs-on: ubuntu-18.04 
+    container:
+      image: quay.io/jduimovich0/oidc-oc
     steps:
     - name: Initialize App Studio Access
-      run: |  
-        brew install int128/kubelogin/kubelogin
+      run: |   
         mkdir -p ~/.kube ~/.kube/cache 
         echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
         echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc.tar  

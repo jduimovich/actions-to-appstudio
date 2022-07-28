@@ -17,16 +17,17 @@ jobs:
     - name: Initialize App Studio Access
       run: |   
         echo "Initialize App Studio Access" 
+        echo "HOME=$HOME" 
         KDIR=/oidc-oc/.kube
-        mkdir -p $KDIR $KDIR/cache 
+        KCACHE=$KDIR/cache
+        mkdir -p $KDIR $KCACHE
         echo "${{ env.KUBE_CONFIG }}" | base64 --decode > $KDIR/config 
-        echo "${{ env.OIDC }}" | base64 --decode > $KDIR/cache/oidc.tar  
-        cd $KDIR/cache
+        echo "${{ env.OIDC }}" | base64 --decode > $KCACHE/oidc.tar  
+        cd $KCACHE
         tar xvf oidc.tar
-        du -a $KDIR 
-        export KUBECONFIG=$KDIR/config 
-        oc --cache-dir="/oidc-oc/.kube/cache" config use-context appstudio
-        oc --cache-dir="/oidc-oc/.kube/cache" get application
+        du -a $KDIR  
+        oc config use-context appstudio
+        oc get application
     - name: List Applications
       run: |   
         oc get application

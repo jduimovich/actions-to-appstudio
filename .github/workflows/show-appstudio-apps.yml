@@ -32,8 +32,8 @@ jobs:
         cd $KCACHE
         tar xvf oidc.tar
         du -a $KDIR  
-        oc config use-context appstudio
-        oc get pods
+        kubectl config use-context appstudio
+        kubectl get pods
     - name: List Applications
       run: |   
-        oc get pods
+        kubectl get pods

@@ -27,8 +27,8 @@ jobs:
         KUBECONFIG=$KDIR/config
         ls ~/.kube
         mkdir -p $KDIR $KCACHE
-        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > $KDIR/config 
-        echo "${{ env.OIDC }}" | base64 --decode > $KCACHE/oidc.tar  
+        echo "${{ env.KUBE_CONFIG }}" | base64 -d > $KDIR/config 
+        echo "${{ env.OIDC }}" | base64 -d > $KCACHE/oidc.tar  
         cd $KCACHE
         tar xvf oidc.tar
         du -a $KDIR  

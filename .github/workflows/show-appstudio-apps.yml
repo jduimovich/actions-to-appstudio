@@ -24,7 +24,7 @@ jobs:
         echo "${{ env.OIDC }}" | base64 --decode > /oidc-oc/.kube/cache/oidc.tar  
         cd /oidc-oc/.kube/cache
         tar xvf oidc.tar   
-        export KUBECONFIG =/oidc-oc/.kube/config 
+        export KUBECONFIG=/oidc-oc/.kube/config 
         oc config use-context appstudio
     - name: List Applications
       run: |   

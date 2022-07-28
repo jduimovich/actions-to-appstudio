@@ -20,6 +20,7 @@ jobs:
       run: |   
         echo "Initialize App Studio Access" 
         whoami
+        kubectl
         echo "HOME=$HOME"  
         mkdir -p $HOME/.kube $HOME/.kube/cache  
         KDIR=$HOME/.kube

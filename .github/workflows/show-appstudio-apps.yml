@@ -19,7 +19,9 @@ jobs:
     - name: Initialize App Studio Access
       run: |   
         echo "Initialize App Studio Access" 
+        whoami
         echo "HOME=$HOME" 
+        echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"  
         mkdir -p $HOME/.kube $HOME/.kube/cache 
         export HOME=/oidc-oc
         echo "HOME2=$HOME"  

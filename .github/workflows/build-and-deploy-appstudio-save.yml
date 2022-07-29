@@ -24,10 +24,7 @@ env:
   CHECK_FOR_APP: "true"
   # 🖊️ EDIT to set a name for your OpenShift app, or a default one will be generated below.
   APP_NAME: "" 
-on: 
-  push:
-    # Edit to the branch(es) you want to build and deploy on each push.
-    branches: [ "main" ]  
+on:  
   workflow_dispatch:
     branches: [ "main" ]  
 jobs:
@@ -85,29 +82,23 @@ jobs:
     - name: Initialize App Studio Log Integration
       continue-on-error: true
       run: |  
-        echo "Initialize App Studio Access"  
-        wget https://github.com/int128/kubelogin/releases/download/v1.25.1/kubelogin_linux_amd64.zip
-        unzip kubelogin_linux_amd64.zip
-        cp kubelogin /usr/local/bin/kubectl-oidc_login
-        mkdir -p $HOME/.kube $HOME/.kube/cache  
-        KDIR=$HOME/.kube
-        KCACHE=$KDIR/cache
-        KUBECONFIG=$KDIR/config
-        ls ~/.kube
-        mkdir -p $KDIR $KCACHE
-        echo "${{ env.KUBE_CONFIG }}" | base64 -d > $KDIR/config 
-        echo "${{ env.OIDC }}" | base64 -d > $KCACHE/oidc.tar  
-        cd $KCACHE
-        tar xvf oidc.tar 
-        kubectl config use-context appstudio 
-        kubectl create secret generic token-secret --from-literal="token.txt=${{ secrets.MY_GITHUB_TOKEN }}" || true
+        brew install int128/kubelogin/kubelogin
+        mkdir -p ~/.kube ~/.kube/cache 
+        echo "${{ env.KUBE_CONFIG }}" | base64 --decode > ~/.kube/config 
+        echo "${{ env.OIDC }}" | base64 --decode > ~/.kube/cache/oidc.tar  
+        pushd $(pwd)
+        cd ~/.kube/cache
+        tar xvf oidc.tar   
+        popd
+        oc config use-context appstudio 
+        oc create secret generic token-secret --from-literal="token.txt=${{ secrets.MY_GITHUB_TOKEN }}" || true
         NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}
         yq pipelinerun.yaml | 
           yq e '.metadata.name = "'$NAME'"' |
           yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 
           yq e '.spec.params[1].value = "'${{ env.APP_NAME }}'"' | 
           yq e '.spec.params[2].value = "'${{ github.run_id }}'"' |   
-          kubectl apply -f - 
+          oc apply -f - 
     - name: Build from Dockerfile 
       id: build-image
       uses: redhat-actions/buildah-build@v2

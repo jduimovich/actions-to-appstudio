@@ -18,10 +18,7 @@ jobs:
     steps:
     - name: Initialize App Studio Access
       run: |   
-        echo "Initialize App Studio Access" 
-        whoami
-        kubectl
-        echo "HOME=$HOME"  
+        echo "Initialize App Studio Access"   
         mkdir -p $HOME/.kube $HOME/.kube/cache  
         KDIR=$HOME/.kube
         KCACHE=$KDIR/cache
@@ -31,10 +28,8 @@ jobs:
         echo "${{ env.KUBE_CONFIG }}" | base64 -d > $KDIR/config 
         echo "${{ env.OIDC }}" | base64 -d > $KCACHE/oidc.tar  
         cd $KCACHE
-        tar xvf oidc.tar
-        du -a $KDIR  
-        kubectl config use-context appstudio
-        kubectl get pods
+        tar xvf oidc.tar 
+        kubectl config use-context appstudio 
         kubectl get applications
     - name: List Applications
       run: |   

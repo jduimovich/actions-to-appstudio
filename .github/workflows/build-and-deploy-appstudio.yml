@@ -150,7 +150,8 @@ jobs:
     - name: Ensure App Running
       if: env.CHECK_FOR_APP == 'true' 
       run: |
-        if ! oc get application ${{ env.APP_NAME }}  &>/dev/null; then 
+        if ! oc get application ${{ env.APP_NAME }}  &>/dev/null
+        then 
           oc apply -f app-studio/app.yaml
           echo "Waiting for Application: ${{ env.APP_NAME }} to be ready."
           while :
@@ -167,7 +168,8 @@ jobs:
         else 
           echo "application ${{ env.APP_NAME }} exists"
         fi
-        if ! oc get component ${{ env.APP_NAME }}  &>/dev/null; then 
+        if ! oc get component ${{ env.APP_NAME }}  &>/dev/null
+        then 
           oc apply -f app-studio/component.yaml
           echo "Waiting for Component: ${{ env.APP_NAME }} to be ready."
           while :
@@ -179,7 +181,8 @@ jobs:
                   break
               fi
               echo -n .
-              sl
+              sleep 1
+          done 
         else
           echo "component ${{ env.APP_NAME }} exists" 
         fi

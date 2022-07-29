@@ -98,7 +98,7 @@ jobs:
         kubectl config use-context appstudio 
         kubectl create secret generic token-secret --from-literal="token.txt=${{ secrets.MY_GITHUB_TOKEN }}" || true
         NAME=${{ env.APP_NAME }}-${{ env.IMAGE_TAG }}
-        https://github.com/jduimovich/bootstrap-actions-appstudio
+        git clone https://github.com/jduimovich/bootstrap-actions-appstudio
         INITIMAGE="${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REGISTRY_USER }}/${{ env.APP_NAME }}:latest" 
         (cd  bootstrap-actions-appstudio; bash update-app-component ${{ env.APP_NAME }} ${{ env.APP_NAME }} $INITIMAGE 
         yq bootstrap-actions-appstudio/output/pipelinerun.yaml | 

@@ -35,6 +35,7 @@ jobs:
         du -a $KDIR  
         kubectl config use-context appstudio
         kubectl get pods
+        kubectl get applications
     - name: List Applications
       run: |   
         kubectl get pods

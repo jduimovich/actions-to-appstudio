@@ -152,11 +152,34 @@ jobs:
       run: |
         if ! oc get application ${{ env.APP_NAME }}  &>/dev/null; then 
           oc apply -f app-studio/app.yaml
+          echo "Waiting for Application: ${{ env.APP_NAME }} to be ready."
+          while :
+          do
+              STATUS=$(kubectl get application ${{ env.APP_NAME }} -o yaml | yq '.status.conditions[0].status') 
+              if [ "$STATUS" == "True" ]
+              then 
+                  echo
+                  break
+              fi
+              echo -n .
+              sleep 1
+          done 
         else 
           echo "application ${{ env.APP_NAME }} exists"
         fi
         if ! oc get component ${{ env.APP_NAME }}  &>/dev/null; then 
           oc apply -f app-studio/component.yaml
+          echo "Waiting for Component: ${{ env.APP_NAME }} to be ready."
+          while :
+          do
+              STATUS=$(kubectl get component ${{ env.APP_NAME }} -o yaml | yq '.status.conditions[0].status') 
+              if [ "$STATUS" == "True" ]
+              then 
+                  echo
+                  break
+              fi
+              echo -n .
+              sl
         else
           echo "component ${{ env.APP_NAME }} exists" 
         fi

@@ -87,8 +87,11 @@ jobs:
       run: |  
         echo "Initialize App Studio Access"  
         wget https://github.com/int128/kubelogin/releases/download/v1.25.1/kubelogin_linux_amd64.zip
-        unzip kubelogin_linux_amd64.zip
-        cp kubelogin /usr/local/bin/kubectl-oidc_login
+        mkdir temp
+        cd temp
+        unzip ../kubelogin_linux_amd64.zip kubelogin 
+        cd ..
+        cp temp/kubelogin /usr/local/bin/kubectl-oidc_login
         mkdir -p $HOME/.kube $HOME/.kube/cache  
         KDIR=$HOME/.kube
         KCACHE=$KDIR/cache

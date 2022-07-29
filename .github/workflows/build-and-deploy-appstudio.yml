@@ -100,14 +100,15 @@ jobs:
         mkdir -p $KDIR $KCACHE
         echo "${{ env.KUBE_CONFIG }}" | base64 -d > $KDIR/config 
         echo "${{ env.OIDC }}" | base64 -d > $KCACHE/oidc.tar  
+        pushd $(pwd)
         cd $KCACHE
-        tar xvf oidc.tar 
+        tar xvf oidc.tar  
+        popd 
         kubectl config use-context appstudio 
         kubectl create secret generic token-secret --from-literal="token.txt=${{ secrets.MY_GITHUB_TOKEN }}" || true
         NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}
         pwd 
-        ls -al
-        cat pipelinerun.yaml
+        ls -al 
         yq pipelinerun.yaml | 
           yq e '.metadata.name = "'$NAME'"' |
           yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 

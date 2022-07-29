@@ -198,8 +198,8 @@ jobs:
         oc annotate pipelinerun --overwrite=true $NAME build.appstudio.openshift.io/repo=${{ github.event.repository.name }}
         oc annotate pipelinerun --overwrite=true $NAME build.appstudio.openshift.io/image=${{ steps.push-image.outputs.registry-path }}
         oc get component ${{ env.APP_NAME }} -o yaml  | \
-          ./yq  e '.spec.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | \
-          ./yq  e '.spec.build.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | \
+          yq  e '.spec.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | \
+          yq  e '.spec.build.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | \
           oc apply -f -
     - name: App Studio Cleanup
       continue-on-error: true

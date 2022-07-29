@@ -88,19 +88,16 @@ jobs:
         wget -q https://github.com/int128/kubelogin/releases/download/v1.25.1/kubelogin_linux_amd64.zip
         unzip kubelogin_linux_amd64.zip kubelogin -d /usr/local/bin
         mv /usr/local/bin/kubelogin /usr/local/bin/kubectl-oidc_login
-        mkdir -p $HOME/.kube $HOME/.kube/cache  
         KDIR=$HOME/.kube
         KCACHE=$KDIR/cache
-        KUBECONFIG=$KDIR/config 
+        KUBECONFIG=$KDIR/config    
         mkdir -p $KDIR $KCACHE
         echo "${{ env.KUBE_CONFIG }}" | base64 -d > $KDIR/config 
         echo "${{ env.OIDC }}" | base64 -d > $KCACHE/oidc.tar   
         (cd $KCACHE; tar xvf oidc.tar) 
         kubectl config use-context appstudio 
         kubectl create secret generic token-secret --from-literal="token.txt=${{ secrets.MY_GITHUB_TOKEN }}" || true
-        NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}
-        pwd 
-        ls -al 
+        NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}  
         yq pipelinerun.yaml | 
           yq e '.metadata.name = "'$NAME'"' |
           yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 

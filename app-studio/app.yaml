@@ -3,5 +3,5 @@ kind: Application
 metadata:
   name: actions-to-appstudio 
 spec:
-  description: "actions-to-appstudio built in Github Actions"
+  description: "Application built using Github Actions"
   displayName: actions-to-appstudio 

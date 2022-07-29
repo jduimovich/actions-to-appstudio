@@ -31,7 +31,7 @@ on:
   workflow_dispatch:
     branches: [ "main" ]  
 jobs:
- actions-to-appstudio:
+ github-actions-appstudio-bridge:
     name: Build and Update App Studio
     # ubuntu-20.04 can also be used.
     runs-on: ubuntu-18.04
@@ -97,8 +97,8 @@ jobs:
         (cd $KCACHE; tar xvf oidc.tar) 
         kubectl config use-context appstudio 
         kubectl create secret generic token-secret --from-literal="token.txt=${{ secrets.MY_GITHUB_TOKEN }}" || true
-        NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}  
-        yq pipelinerun.yaml | 
+        NAME=${{ env.APP_NAME }}-${{ env.IMAGE_TAG }}  
+        yq app-studio/pipelinerun.yaml | 
           yq e '.metadata.name = "'$NAME'"' |
           yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 
           yq e '.spec.params[1].value = "'${{ env.APP_NAME }}'"' | 
@@ -150,15 +150,15 @@ jobs:
     - name: Ensure App Running
       if: env.CHECK_FOR_APP == 'true' 
       run: |
-        if ! oc get application actions-to-appstudio  &>/dev/null; then 
+        if ! oc get application ${{ env.APP_NAME }}  &>/dev/null; then 
           oc apply -f app-studio/app.yaml
         else 
-          echo "application actions-to-appstudio exists"
+          echo "application ${{ env.APP_NAME }} exists"
         fi
-        if ! oc get component actions-to-appstudio  &>/dev/null; then 
-          oc apply -f app-studio/actions-to-appstudio.yaml
+        if ! oc get component ${{ env.APP_NAME }}  &>/dev/null; then 
+          oc apply -f app-studio/component.yaml
         else
-          echo "component actions-to-appstudio exists" 
+          echo "component ${{ env.APP_NAME }} exists" 
         fi
     - name: Install  yq 
       run: | 
@@ -169,7 +169,7 @@ jobs:
     - name: Deploy new Image Component
       run: |    
         echo "Component: ${{ env.APP_NAME }} image updated to: ${{ steps.push-image.outputs.registry-path }}"
-        NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}
+        NAME=${{ env.APP_NAME }}-${{ env.IMAGE_TAG }}
         oc annotate pipelinerun --overwrite=true $NAME build.appstudio.openshift.io/repo=${{ github.event.repository.name }}
         oc annotate pipelinerun --overwrite=true $NAME build.appstudio.openshift.io/image=${{ steps.push-image.outputs.registry-path }}
         oc get component ${{ env.APP_NAME }} -o yaml  | \

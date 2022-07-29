@@ -86,24 +86,17 @@ jobs:
       continue-on-error: true
       run: |  
         echo "Initialize App Studio Access"  
-        wget https://github.com/int128/kubelogin/releases/download/v1.25.1/kubelogin_linux_amd64.zip
-        mkdir temp
-        cd temp
-        unzip ../kubelogin_linux_amd64.zip kubelogin 
-        cd ..
-        cp temp/kubelogin /usr/local/bin/kubectl-oidc_login
+        wget -q https://github.com/int128/kubelogin/releases/download/v1.25.1/kubelogin_linux_amd64.zip
+        unzip ../kubelogin_linux_amd64.zip kubelogin  
+        mv kubelogin /usr/local/bin/kubectl-oidc_login
         mkdir -p $HOME/.kube $HOME/.kube/cache  
         KDIR=$HOME/.kube
         KCACHE=$KDIR/cache
-        KUBECONFIG=$KDIR/config
-        ls ~/.kube
+        KUBECONFIG=$KDIR/config 
         mkdir -p $KDIR $KCACHE
         echo "${{ env.KUBE_CONFIG }}" | base64 -d > $KDIR/config 
-        echo "${{ env.OIDC }}" | base64 -d > $KCACHE/oidc.tar  
-        pushd $(pwd)
-        cd $KCACHE
-        tar xvf oidc.tar  
-        popd 
+        echo "${{ env.OIDC }}" | base64 -d > $KCACHE/oidc.tar   
+        (cd $KCACHE; tar xvf oidc.tar) 
         kubectl config use-context appstudio 
         kubectl create secret generic token-secret --from-literal="token.txt=${{ secrets.MY_GITHUB_TOKEN }}" || true
         NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}
@@ -180,15 +173,9 @@ jobs:
     - name: Deploy new Image Component
       run: |    
         echo "Component: ${{ env.APP_NAME }} image updated to: ${{ steps.push-image.outputs.registry-path }}"
-        #./yq e '.spec.containerImage="'${{ steps.push-image.outputs.registry-path }}'"'  -i app-studio/actions-to-appstudio.yaml
-        #./yq e '.metadata.resourceVersion=0' -i app-studio/actions-to-appstudio.yaml
-        #cat app-studio/actions-to-appstudio.yaml
-        #oc apply -f app-studio/actions-to-appstudio.yaml
         NAME=actions-to-appstudio-${{ env.IMAGE_TAG }}
-
         oc annotate pipelinerun --overwrite=true $NAME build.appstudio.openshift.io/repo=${{ github.event.repository.name }}
         oc annotate pipelinerun --overwrite=true $NAME build.appstudio.openshift.io/image=${{ steps.push-image.outputs.registry-path }}
-
         oc get component ${{ env.APP_NAME }} -o yaml  | \
           ./yq  e '.spec.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | \
           ./yq  e '.spec.build.containerImage = "${{ steps.push-image.outputs.registry-path }}"' - | \

@@ -102,7 +102,7 @@ jobs:
         du -a bootstrap-actions-appstudio
         INITIMAGE="${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REGISTRY_USER }}/${{ env.APP_NAME }}:latest"
         echo "IMAGE IS $INITIMAGE " 
-        (cd  bootstrap-actions-appstudio; bash update-app-component ${{ env.APP_NAME }} ${{ env.APP_NAME }} $INITIMAGE 
+        (cd  bootstrap-actions-appstudio; bash update-app-component ${{ env.APP_NAME }} ${{ env.APP_NAME }} $INITIMAGE)
         yq bootstrap-actions-appstudio/output/pipelinerun.yaml | 
           yq e '.metadata.name = "'$NAME'"' |
           yq e '.spec.params[0].value = "'${{ github.actor }}'"' | 
@@ -191,12 +191,6 @@ jobs:
         else
           echo "component ${{ env.APP_NAME }} exists" 
         fi
-    - name: Install  yq 
-      run: | 
-        export VERSION=v4.2.0  
-        export BINARY=yq_linux_amd64
-        wget -q https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O ./yq
-        chmod +x ./yq
     - name: Deploy new Image Component
       run: |    
         echo "Component: ${{ env.APP_NAME }} image updated to: ${{ steps.push-image.outputs.registry-path }}"
